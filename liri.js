@@ -1,16 +1,21 @@
 require("dotenv").config();
 
+var fs = require("fs");
 var keys = require("./keys");
 var Twitter = require("twitter");
 var Spotify = require('node-spotify-api');
 var request = require("request");
 
+// holds api keys
+var client = new Twitter(keys.twitter);
+var spotify = new Spotify(keys.spotify)
+
 var siteStatement = process.argv[3];
 var searchTerm = process.argv;
 var search = "";
 
-for (var i = 2; i < searchTerm.length; i++) {
-  if (i > 2 && i < searchTerm.length) {
+for (var i = 3; i < searchTerm.length; i++) {
+  if (i > 3 && i < searchTerm.length) {
     search = search + "+" + searchTerm[i];
   }
   else {
@@ -18,20 +23,23 @@ for (var i = 2; i < searchTerm.length; i++) {
   };
 }
 
-function twitter() {
-    var client = new Twitter(keys.twitter);
-    var param ={q:'chenne7', count:20}
-
-    client.get('search/tweets', param, searchedData);
-     function searchedData(error, twitter, response) {
-         console.log(data);
-                }
+// Twitter search
+var twitterSearch = function(){
+    var params = {screen_name: 'chenne7', count:20}
 }
-     twitter.data();
-  
+    client.get('statuses/user_timeline', params, function (error, tweets,){
+        if(!error){
+            for (i = 0; i < tweets.length; i++){
+                console.log(tweets[i].created_at);
+                console.log("");
+                console.log(tweets[i].text);
+            }
+        }
+    });
+   
 
 function spotify() {
-    var spotify = new Spotify(keys.spotify)
+    
       search = search || "The Sign Ace Base";
       spotify.search({ type: 'track', query: search, limit: 1 }, function (err, data) {
         if (err) {
@@ -49,7 +57,7 @@ function spotify() {
 
     switch (siteStatement) {
         case "my-tweets":
-            twitter();
+            twitterSearch();
             break;        
                 
         case "spotify-this-song":
@@ -67,7 +75,7 @@ function spotify() {
       }
 
       function doWhatItSays() {
-        var fs = require("fs");
+        
             fs.readFile("./rondom.txt", "utf8", function (error, data) {
                 if (error) {
                 return console.log(error);
