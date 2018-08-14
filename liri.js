@@ -10,8 +10,9 @@ var request = require("request");
 var client = new Twitter(keys.twitter);
 var spotify = new Spotify(keys.spotify)
 
-var siteStatement = process.argv[3];
+var siteStatement = process.argv[2];
 var searchTerm = process.argv;
+var userTerm = process.argv[3];
 var search = "";
 
 for (var i = 3; i < searchTerm.length; i++) {
@@ -21,25 +22,33 @@ for (var i = 3; i < searchTerm.length; i++) {
   else {
     search += searchTerm[i];
   };
-}
+} 
+console.log("search" + search);
 
 // Twitter search
 var twitterSearch = function(){
-    var params = {screen_name: 'chenne7', count:20}
-}
-    client.get('statuses/user_timeline', params, function (error, tweets,){
+    var params = {screen_name: 'chenne7'}
+    console.log(params);
+   
+    client.get('statuses/user_timeline', params, function (error, tweets, response){
+    //    console.log(response);
+       console.log(tweets);
         if(!error){
             for (i = 0; i < tweets.length; i++){
                 console.log(tweets[i].created_at);
                 console.log("");
                 console.log(tweets[i].text);
+                
             }
-        }
+        } 
     });
+}
+
+    
    
 
 function spotify() {
-    
+        
       search = search || "The Sign Ace Base";
       spotify.search({ type: 'track', query: search, limit: 1 }, function (err, data) {
         if (err) {
@@ -79,7 +88,6 @@ function spotify() {
             fs.readFile("./rondom.txt", "utf8", function (error, data) {
                 if (error) {
                 return console.log(error);
-
             }
       
         var random = data.split(",");
@@ -92,9 +100,12 @@ function spotify() {
 
 
 function omdb() {
-    search = search || "Mr. Nobody"
+    console.log(`search`,search)
+    if (userTerm === undefined) {userTerm = "Mr. Nobody"}
+    
   
-    var queryUrl = "http://www.omdbapi.com/?t=" + search + "&y=&plot=short&apikey=fb9989ab";
+    var queryUrl = "http://www.omdbapi.com/?t=" + userTerm + "&y=&plot=short&apikey=fb9989ab";
+    console.log(queryUrl);
        
     request(queryUrl, function (error, response, body) {
         if (!error && response.statusCode === 200) {
@@ -102,7 +113,7 @@ function omdb() {
         console.log("Title: " + JSON.parse(body).Title);
         console.log("Release Year: " + JSON.parse(body).Year);
         console.log("Rated: " + JSON.parse(body).Rated);
-        console.log("Rotten Tomatoes Rating: " + JSON.parse(body).Ratings[1].Value + " Fresh");
+        console.log("Rotten Tomatoes Rating: " + JSON.parse(body).Ratings[1].Value);
         console.log("Produced in: " + JSON.parse(body).Country);
         console.log("Language(s): " + JSON.parse(body).Language);
         console.log("Plot: " + JSON.parse(body).Plot);
