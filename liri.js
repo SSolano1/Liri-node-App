@@ -6,7 +6,7 @@ var Twitter = require("twitter");
 var Spotify = require('node-spotify-api');
 var request = require("request");
 
-// holds api keys
+// // holds api keys
 var client = new Twitter(keys.twitter);
 var spotify = new Spotify(keys.spotify)
 
@@ -32,7 +32,9 @@ var twitterSearch = function(){
    
     client.get('statuses/user_timeline', params, function (error, tweets, response){
     //    console.log(response);
-       console.log(tweets);
+    //    console.log(JSON.stringify(tweets));
+    //    console.log(error);
+    //    console.log(JSON.stringify(response));
         if(!error){
             for (i = 0; i < tweets.length; i++){
                 console.log(tweets[i].created_at);
@@ -43,13 +45,12 @@ var twitterSearch = function(){
         } 
     });
 }
-
-    
    
 
-function spotify() {
-        
+function spotifyme() {
+      console.log("spotify");  
       search = search || "The Sign Ace Base";
+    // var search = "The Sign Ace Base"
       spotify.search({ type: 'track', query: search, limit: 1 }, function (err, data) {
         if (err) {
           return console.log('Error occurred: ' + err);
@@ -70,7 +71,7 @@ function spotify() {
             break;        
                 
         case "spotify-this-song":
-            spotify();
+            spotifyme();
             break;
       
         case "do-what-it-says":
@@ -85,7 +86,7 @@ function spotify() {
 
       function doWhatItSays() {
         
-            fs.readFile("./rondom.txt", "utf8", function (error, data) {
+            fs.readFile("./random.txt", "utf8", function (error, data) {
                 if (error) {
                 return console.log(error);
             }
@@ -102,7 +103,6 @@ function spotify() {
 function omdb() {
     console.log(`search`,search)
     if (userTerm === undefined) {userTerm = "Mr. Nobody"}
-    
   
     var queryUrl = "http://www.omdbapi.com/?t=" + userTerm + "&y=&plot=short&apikey=fb9989ab";
     console.log(queryUrl);
