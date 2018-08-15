@@ -120,7 +120,7 @@ function omdb() {
         console.log("Starring: " + JSON.parse(body).Actors);
         }
       else {
-          return console.log('Error occurred: ' + err);
+          return console.log('Error occurred: ' + error);
       }
     })
 
