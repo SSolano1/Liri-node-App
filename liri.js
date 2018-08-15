@@ -94,7 +94,7 @@ function spotifyme() {
         var random = data.split(",");
             siteStatement = random[0];
             search = random[1];
-            spotify();
+            spotifyme();
         });
       } 
       
